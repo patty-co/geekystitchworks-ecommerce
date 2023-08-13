@@ -9,6 +9,10 @@ import basket from '@/public/5906.jpg'
 export default function Cart() {
     const cartStore = useCartStore()
 
+    const totalPrice = cartStore.cart.reduce((acc, item) => {
+        return acc + item.unit_amount! * item.quantity!
+    }, 0)
+
     return(
         <div onClick={() => cartStore.toggleCart()}
         className="fixed w-full h-screen left-0 top-0 bg-black/25">
@@ -34,7 +38,10 @@ export default function Cart() {
                     </div>
                 ))}
                 {cartStore.cart.length > 0 && (
-                    <button className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white">Checkout</button>
+                    <>
+                        <p>Total: {formatPrice(totalPrice)} </p>
+                        <button className="py-2 mt-4 bg-teal-700 w-full rounded-md text-white">Checkout</button>
+                    </>
                 )}
                 {!cartStore.cart.length && (
                     <div className="flex flex-col items-center gap-12 text-2xl font-medium pt-56 opacity-75">

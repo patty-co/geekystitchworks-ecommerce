@@ -3,11 +3,15 @@ import { persist } from 'zustand/middleware'
 import { AddCartType } from "./types/AddCartType"
 
 type CartState = {
-    isOpen: boolean,
-    cart: AddCartType[],
-    toggleCart: () => void,
-    addProduct: (item: AddCartType) => void,
+    isOpen: boolean
+    cart: AddCartType[]
+    toggleCart: () => void
+    addProduct: (item: AddCartType) => void
     removeProduct: (item: AddCartType) => void
+    paymentIntent: string
+    setPaymentIntent: (val: string) => void
+    onCheckout: string
+    setCheckout: (val: string) => void
 }
 
 export const useCartStore = create<CartState>()(
@@ -15,6 +19,8 @@ export const useCartStore = create<CartState>()(
         (set) => ({
             cart: [],
             isOpen: false,
+            onCheckout: "cart",
+            setCheckout: (val) => set((state)=> ({onCheckout: val})),
             toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
             addProduct: (item) => set((state) => {
                 const existingItem = state.cart.find(cartItem => cartItem.id === item.id)
@@ -44,7 +50,9 @@ export const useCartStore = create<CartState>()(
                     const filteredCart = state.cart.filter((cartItem) => cartItem.id !== item.id)
                     return { cart: filteredCart }
                 }
-            })
+            }),
+            paymentIntent: "",
+            setPaymentIntent: (val) => set((state)=> ({paymentIntent: val}))
         }),
         { name: 'cart-store' }
     )
